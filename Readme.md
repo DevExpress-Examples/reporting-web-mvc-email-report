@@ -1,3 +1,10 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [Global.asax.cs](./CS/CustomDocumentOperationService/Global.asax.cs) (VB: [Global.asax.vb](./VB/CustomDocumentOperationService/Global.asax.vb))
+* **[CustomDocumentOperationService.cs](./CS/CustomDocumentOperationService/Services/CustomDocumentOperationService.cs) (VB: [CustomDocumentOperationService.vb](./VB/CustomDocumentOperationService/Services/CustomDocumentOperationService.vb))**
+* [Viewer.cshtml](./CS/CustomDocumentOperationService/Views/Home/Viewer.cshtml)
+<!-- default file list end -->
 # Web Document Viewer - How to send a report via Email from the client side
 
 
