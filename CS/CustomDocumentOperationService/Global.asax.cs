@@ -7,8 +7,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
             
 using DevExpress.Web.Mvc;
+using DevExpress.XtraReports.Services;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
-using DocumentOperationServiceSample.Services;
 
 namespace DocumentOperationServiceSample {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -17,7 +17,9 @@ namespace DocumentOperationServiceSample {
     public class MvcApplication : System.Web.HttpApplication {
         protected void Application_Start() {
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Default;
-            DefaultWebDocumentViewerContainer.Register<DocumentOperationService, CustomDocumentOperationService>();
+            DefaultWebDocumentViewerContainer.Register<DocumentOperationService, Services.CustomDocumentOperationService>();
+            DevExpress.XtraReports.Web.WebDocumentViewer.DefaultWebDocumentViewerContainer.Register<IReportProvider, Services.ReportProvider>();
+
             MVCxWebDocumentViewer.StaticInitialize();
             AreaRegistration.RegisterAllAreas();
 

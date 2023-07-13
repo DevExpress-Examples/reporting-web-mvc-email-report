@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Web
@@ -6,6 +6,7 @@ Imports System.Web.Http
 Imports System.Web.Mvc
 Imports System.Web.Routing
 Imports DevExpress.Web.Mvc
+Imports DevExpress.XtraReports.Services
 Imports DevExpress.XtraReports.Web.WebDocumentViewer
 Imports DocumentOperationServiceSample.Services
 
@@ -19,6 +20,9 @@ Namespace DocumentOperationServiceSample
         Protected Sub Application_Start()
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Default
             DefaultWebDocumentViewerContainer.Register(Of DocumentOperationService, CustomDocumentOperationService)()
+            DevExpress.XtraReports.Web.WebDocumentViewer.DefaultWebDocumentViewerContainer.Register(Of IReportProvider, ReportProvider)()
+
+
             MVCxWebDocumentViewer.StaticInitialize()
             AreaRegistration.RegisterAllAreas()
 

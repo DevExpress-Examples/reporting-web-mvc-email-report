@@ -1,93 +1,64 @@
-﻿using System.IO;
-using System.Net;
-using System.Net.Mail;
+using System;
+using System.IO;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using DevExpress.XtraReports.Web.WebDocumentViewer.DataContracts;
+using MailKit.Security;
 
-namespace DocumentOperationServiceSample.Services
-{
+namespace DocumentOperationServiceSample.Services {
     public class CustomDocumentOperationService : DocumentOperationService {
-        public override bool CanPerformOperation(DocumentOperationRequest request)
-        {
+        public override bool CanPerformOperation(DocumentOperationRequest request) {
             return true;
         }
 
-        public override DocumentOperationResponse PerformOperation(DocumentOperationRequest request, PrintingSystemBase initialPrintingSystem, PrintingSystemBase printingSystemWithEditingFields)
-        {
+        public override DocumentOperationResponse PerformOperation(DocumentOperationRequest request, 
+            PrintingSystemBase initialPrintingSystem, 
+            PrintingSystemBase printingSystemWithEditingFields) {
             using (var stream = new MemoryStream()) {
+                System.Net.Mail.MailMessage mMessage = 
+                    printingSystemWithEditingFields.ExportToMail(request.CustomData,
+                    "john.doe@test.com",
+                    "John Doe");
+                mMessage.Subject = "Test";
+
+                // Create a new attachment and add the PDF document.
                 printingSystemWithEditingFields.ExportToPdf(stream);
-                stream.Position = 0;
-                var mailAddress = new MailAddress(request.CustomData);
-                var recipients = new MailAddressCollection() { mailAddress };
-                var attachment = new Attachment(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
-                return SendEmail(recipients, "Enter_Mail_Subject", "Enter_Message_Body", attachment);
-            }
-        }
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
+                System.Net.Mail.Attachment attachedDoc = 
+                    new System.Net.Mail.Attachment(stream, "TestReport.pdf", "application/pdf");
+                mMessage.Attachments.Add(attachedDoc);
 
-        DocumentOperationResponse SendEmail(MailAddressCollection recipients, string subject, string messageBody, Attachment attachment) {
-            string SmtpHost = null;
-            int SmtpPort = -1;
-            if (string.IsNullOrEmpty(SmtpHost) || SmtpPort == -1) {
-                return new DocumentOperationResponse { Message = "Please configure the SMTP server settings." };
-            }
+                var message = (MimeKit.MimeMessage)mMessage;
 
-            string SmtpUserName = "Enter_Sender_User_Account";
-            string SmtpUserPassword = "Enter_Sender_Password";
-            string SmtpFrom = "Enter_Sender_Address";
-            string SmtpFromDisplayName = "Enter_Sender_Display_Name";
-            using (var smtpClient = new SmtpClient(SmtpHost, SmtpPort))
-            {
-                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtpClient.EnableSsl = true;
+                string smtpHost = "localhost";
+                int smtpPort = 25;
 
-                if (!string.IsNullOrEmpty(SmtpUserName))
-                {
-                    smtpClient.Credentials = new NetworkCredential(SmtpUserName, SmtpUserPassword);
-                }
 
-                using (var message = new MailMessage())
-                {
-                    message.Subject = subject.Replace("\r", "").Replace("\n", "");
-                    message.IsBodyHtml = true;
-                    message.Body = messageBody;
-                    message.From = new MailAddress(SmtpFrom, SmtpFromDisplayName);
-
-                    foreach (var item in recipients)
-                    {
-                        message.To.Add(item);
-                    }
-
-                    try
-                    {
-                        if (attachment != null)
-                        {
-                            message.Attachments.Add(attachment);
+                using (message) {
+                    using (var client = new MailKit.Net.Smtp.SmtpClient()) {
+                        try {
+                            client.Connect(smtpHost, smtpPort, SecureSocketOptions.Auto);
+                            //client.Authenticate(userName, password);
+                            client.Send(message);
+                            client.Disconnect(true);
+                            return new DocumentOperationResponse {
+                                Succeeded = true,
+                                Message = "Mail was sent successfully",
+                                DocumentId = printingSystemWithEditingFields.Document.Name
+                            };
                         }
-                        smtpClient.Send(message);
-                        return new DocumentOperationResponse
-                        {
-                            Succeeded = true,
-                            Message = "Mail was sent successfully"
-                        };
-                    }
-                    catch (SmtpException e)
-                    {
-                        return new DocumentOperationResponse
-                        {
-                            Message = "Sending an email message failed."
-                        };
-                    }
-                    finally
-                    {
-                        message.Attachments.Clear();
+                        catch (Exception ex) {
+                            return new DocumentOperationResponse {
+                                Message = ex.Message, 
+                                Succeeded = false,
+                            };
+                        }
                     }
                 }
             }
         }
 
-        protected string RemoveNewLineSymbols(string value)
-        {
+        protected string RemoveNewLineSymbols(string value) {
             return value;
         }
     }
