@@ -3,18 +3,37 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T566760)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-<!-- default file list -->
-*Files to look at*:
+# Reporting for Web - How to Email a Report from the Document Viewer
+
+This example adds a custom action button to the Document Viewer that triggers a custom operation on the server side. The server-side custom operation exports a report to HTML and PDF, and emails the resulting documents.
+
+When you run the application, you observe the Document Viewer with a newly added action button:
+
+![Document Viewer with a Custom Button to Email a Report](Images/document-viewer-custom-button.png)
+
+
+ To email a report, click the button. The application attempts to send email to `someone@test.com` using the `localhost` SMTP server, port 25. Modify the code to apply your mail server settings.
+
+ The report sent by email is shown in the following image:
+
+![Report Sent by Email](Images/report-sent-by-email.png)
+
+When the user clicks the 'Send via Email' button, the client-side [PerformCustomDocumentOperation](https://docs.devexpress.com/XtraReports/js-ASPxClientWebDocumentViewer#js_aspxclientwebdocumentviewer_performcustomdocumentoperation) method passes data to the [DocumentOperationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService) on the server. The service exports the report to PDF and HTML formats, creates the [MIME message](http://www.mimekit.net/docs/html/T_MimeKit_MimeMessage.htm) and sends email using the [MailKIt](https://github.com/jstedfast/MailKit) client.
+
+The [PerformCustomDocumentOperation](https://docs.devexpress.com/XtraReports/js-ASPxClientWebDocumentViewer#js_aspxclientwebdocumentviewer_performcustomdocumentoperation) method returns an object that implements the  [IDocumentOperationResult](https://docs.devexpress.com/XtraReports/js-DevExpress.Reporting.Viewer.Utils.IDocumentOperationResult) interface, so you can return the data from the [DocumentOperationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService) to the client.
+
+## Files to Look At
 
 * [Global.asax.cs](./CS/CustomDocumentOperationService/Global.asax.cs) (VB: [Global.asax.vb](./VB/CustomDocumentOperationService/Global.asax.vb))
-* **[CustomDocumentOperationService.cs](./CS/CustomDocumentOperationService/Services/CustomDocumentOperationService.cs) (VB: [CustomDocumentOperationService.vb](./VB/CustomDocumentOperationService/Services/CustomDocumentOperationService.vb))**
-* [Viewer.cshtml](./CS/CustomDocumentOperationService/Views/Home/Viewer.cshtml)
-<!-- default file list end -->
-# Web Document Viewer - How to send a report via Email from the client side
+* [CustomDocumentOperationService.cs](./CS/CustomDocumentOperationService/Services/CustomDocumentOperationService.cs) (VB: [CustomDocumentOperationService.vb](./VB/CustomDocumentOperationService/Services/CustomDocumentOperationService.vb))
+* [Viewer.cshtml](./CS/CustomDocumentOperationService/Views/Home/Viewer.cshtml) (VB: [Viewer.vbhtml](./VB/CustomDocumentOperationService/Views/Home/Viewer.vbhtml))
 
+## Documentation
 
-This example demonstrates how to perform a custom operation with a Document Viewer's currently opened document. In particular, it shows how to send the document via Email.<br><br>On the server side, create a <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService.class">DocumentOperationService</a> class descendant and override its <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService.CanPerformOperation.method">CanPerformOperation</a> and <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService.PerformOperation.method">PerformOperation</a> methods. To register your custom class, use the <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DefaultWebDocumentViewerContainer.Register~T~TImpl~.method">DefaultWebDocumentViewerContainer.Register</a> method at the application startup.<br><br>On the client side, add a new toolbar button in the <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.Scripts.ASPxClientWebDocumentViewer.CustomizeMenuActions.event">CustomizeMenuActions</a> event handler and call the <a href="https://documentation.devexpress.com/XtraReports/DevExpress.XtraReports.Web.Scripts.ASPxClientWebDocumentViewer.PerformCustomDocumentOperation.overloads">PerformCustomDocumentOperation</a> method when clicking this button.
+- [DocumentOperationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService)
+- [PerformCustomDocumentOperation](https://docs.devexpress.com/XtraReports/js-ASPxClientWebDocumentViewer?f=DocumentOperationService#js_aspxclientwebdocumentviewer_performcustomdocumentoperation)
+- [Services in the Document Viewer](https://docs.devexpress.com/XtraReports/400226/web-reporting/asp-net-mvc-reporting/document-viewer-in-asp-net-mvc-applications/customization/register-services-in-the-document-viewer)
 
-<br/>
+## More Examples
 
-
+- [Reporting for WinForms - How to Use MailKit to Email a Report](https://github.com/DevExpress-Examples/reporting-winforms-mailkit-email-report-pdf)

@@ -8,9 +8,13 @@
     function CustomizeMenuActions(s, e) {
         var itemDisabled = ko.observable(true);
         s.Init.AddHandler(function (s) {
-            var exportDisabled = s.GetReportPreview().exportDisabled;
-            exportDisabled.subscribe(function (newValue) { itemDisabled(newValue); });
-            itemDisabled(exportDisabled());
+            var reportPreview = s.GetReportPreview();
+            reportPreview.events.on('propertyChanged', (e) => {
+                if(e.propertyName === 'exportDisabled') {
+                    itemDisabled(e.newValue);
+                }
+            });
+            itemDisabled(reportPreview.exportDisabled);
         });
         var sendViaEmailItem = {
             id: 'someCustomId',
@@ -19,7 +23,8 @@
             visible: true,
             disabled: itemDisabled,
             clickAction: function () {
-                s.PerformCustomDocumentOperation('some@email.com');
+                s.PerformCustomDocumentOperation('someone@test.com')
+                    .done((arg) => alert('Document ' + arg.documentId + " : " + arg.message));
             }
         };
         e.Actions.push(sendViaEmailItem);
@@ -28,4 +33,4 @@
 @Html.DevExpress().WebDocumentViewer(settings => {
     settings.Name = "WebDocumentViewer1";
     settings.ClientSideEvents.CustomizeMenuActions = "CustomizeMenuActions";
-}).Bind(new CategoriesReport()).GetHtml()
+}).Bind("CategoriesReport").GetHtml()
