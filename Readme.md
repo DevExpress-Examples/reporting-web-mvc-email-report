@@ -22,7 +22,7 @@ When the user clicks the 'Send via Email' button, the client-side [PerformCustom
 
 The [PerformCustomDocumentOperation](https://docs.devexpress.com/XtraReports/js-ASPxClientWebDocumentViewer#js_aspxclientwebdocumentviewer_performcustomdocumentoperation) method returns an object that implements the  [IDocumentOperationResult](https://docs.devexpress.com/XtraReports/js-DevExpress.Reporting.Viewer.Utils.IDocumentOperationResult) interface, so you can return the data from the [DocumentOperationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.DocumentOperationService) to the client.
 
-## Files to Look At
+## Files to Review
 
 * [Global.asax.cs](./CS/CustomDocumentOperationService/Global.asax.cs) (VB: [Global.asax.vb](./VB/CustomDocumentOperationService/Global.asax.vb))
 * [CustomDocumentOperationService.cs](./CS/CustomDocumentOperationService/Services/CustomDocumentOperationService.cs) (VB: [CustomDocumentOperationService.vb](./VB/CustomDocumentOperationService/Services/CustomDocumentOperationService.vb))
