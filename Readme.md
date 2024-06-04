@@ -36,3 +36,4 @@ The [PerformCustomDocumentOperation](https://docs.devexpress.com/XtraReports/js-
 ## More Examples
 
 - [Reporting for WinForms - How to Use MailKit to Email a Report](https://github.com/DevExpress-Examples/reporting-winforms-mailkit-email-report-pdf)
+- [Reporting for Blazor - Email a Report from the Native Blazor Report Viewer](https://github.com/DevExpress-Examples/reporting-blazor-email-report)
