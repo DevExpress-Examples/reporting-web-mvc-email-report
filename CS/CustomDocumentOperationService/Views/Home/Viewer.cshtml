@@ -23,8 +23,9 @@
             visible: true,
             disabled: itemDisabled,
             clickAction: function () {
+                var previewModel = s.GetPreviewModel();
                 s.PerformCustomDocumentOperation('someone@test.com')
-                    .done((arg) => alert('Document ' + arg.documentId + " : " + arg.message));
+                    .then((arg) => alert('Document ' + arg.documentId + " : " + arg.message));
             }
         };
         e.Actions.push(sendViaEmailItem);
